@@ -1,0 +1,27 @@
+{
+  "name": "ldrize-next-for-google",
+  "version": "0.0.2",
+  "displayName": "LDRize Next for Google",
+  "description": "LDRize Next for Google",
+  "author": "yuki yano",
+  "scripts": {
+    "build:chrome": "ENV=CHROME vite build",
+    "build:firefox": "ENV=FIREFOX vite build",
+    "watch:chrome": "ENV=CHROME vite build --watch --mode development --minify false",
+    "watch:firefox": "ENV=FIREFOX vite build --watch --mode development --minify false"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@samrum/vite-plugin-web-extension": "^5.0.0",
+    "@types/chrome": "^0.0.228",
+    "@types/webextension-polyfill": "^0.10.0",
+    "typescript": "^5.0.4",
+    "vite": "~4.3.3",
+    "web-ext": "^7.6.2"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
+    "immer": "^10.0.2",
+    "webextension-polyfill": "^0.10.0"
+  }
+}
