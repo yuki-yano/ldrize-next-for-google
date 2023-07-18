@@ -15,6 +15,13 @@ const sharedManifest: Partial<chrome.runtime.ManifestBase> = {
   ],
 };
 
+const localFirefoxManifest = {
+  applications: {
+    gecko: {
+      id: "yuki-ycino@gmail.com",
+    },
+  },
+};
 export function getManifest(
   version: 2 | 3
 ): chrome.runtime.ManifestV2 | chrome.runtime.ManifestV3 {
@@ -25,5 +32,6 @@ export function getManifest(
     version: pkg.version,
     manifest_version: version,
     ...sharedManifest,
+    ...(process.env.BROWSER === "FIREFOX_LOCAL" ? localFirefoxManifest : {}),
   } as chrome.runtime.ManifestV2 | chrome.runtime.ManifestV3;
 }

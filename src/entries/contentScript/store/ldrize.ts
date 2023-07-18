@@ -125,3 +125,5 @@ export const candidateSelector = (link: string): Candidate | undefined => {
     .ldrize.candidates.find((candidate) => candidate.link === link);
 };
 export const startedSelector = () => store.getState().ldrize.started;
+export const currentCandidateSelector = () =>
+  store.getState().ldrize.candidates[store.getState().ldrize.cursor];

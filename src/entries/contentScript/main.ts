@@ -1,10 +1,6 @@
 import { setUpLdrizeEventListener } from "./keyboard";
 import { dispatch } from "./store";
-import {
-  candidateSelector,
-  ldrizeSlice,
-  startedSelector,
-} from "./store/ldrize";
+import { candidateSelector, ldrizeSlice } from "./store/ldrize";
 
 const getLinkFromItem = (item: Element): string | undefined => {
   return item.querySelector<HTMLAnchorElement>("div > a")?.href;
@@ -41,24 +37,31 @@ const observer = new MutationObserver((mutations) => {
     if (mutation.type === "childList") {
       const items = getItems();
       if (items.length > 0) {
-        if (startedSelector() === false) {
-          dispatch(ldrizeSlice.actions.start());
-          setUpLdrizeEventListener();
-        }
         updateItems(items);
       }
     }
   });
 });
 
-const main = () => {
-  observer.observe(document.body, { childList: true, subtree: true });
+const initialize = () => {
+  dispatch(ldrizeSlice.actions.start());
+  setUpLdrizeEventListener();
 
   const items = getItems();
   if (items.length > 0) {
     updateItems(items);
     dispatch(ldrizeSlice.actions.select({ index: 0 }));
   }
+};
+
+const main = () => {
+  const resElement = document.querySelector("#res");
+  if (resElement === null) {
+    return;
+  }
+
+  observer.observe(resElement, { childList: true, subtree: true });
+  initialize();
 };
 
 main();

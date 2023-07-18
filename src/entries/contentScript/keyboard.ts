@@ -1,5 +1,6 @@
+import * as KeyCode from "keycode-js";
 import { dispatch } from "./store";
-import { ldrizeSlice } from "./store/ldrize";
+import { currentCandidateSelector, ldrizeSlice } from "./store/ldrize";
 
 let isLoaded = false;
 
@@ -8,7 +9,10 @@ export const setUpLdrizeEventListener = () => {
     return;
   }
   document.addEventListener("keydown", (e: KeyboardEvent) => {
-    if (!(document.activeElement instanceof HTMLInputElement)) {
+    if (
+      !(document.activeElement instanceof HTMLInputElement) &&
+      !(document.activeElement instanceof HTMLTextAreaElement)
+    ) {
       switch (e.key) {
         case "j":
           e.preventDefault();
@@ -49,20 +53,28 @@ export const setUpLdrizeEventListener = () => {
           e.preventDefault();
           e.stopPropagation();
 
-          const inputElement = document.querySelector(
-            'input[name="q"]'
-          ) as HTMLInputElement | null;
-
-          if (!inputElement) {
-            return;
+          // NOTE: for Chrome
+          if (process.env.BROWSER === "CHROME") {
+            const inputElement = document.querySelector(
+              'input[name="q"]'
+            ) as HTMLInputElement | null;
+            if (inputElement) {
+              inputElement.focus();
+              inputElement.click();
+              inputElement.setSelectionRange(
+                inputElement.value.length,
+                inputElement.value.length
+              );
+            }
+          } else {
+            // NOTE: for Firefox
+            document.dispatchEvent(new KeyboardEvent("keydown", { key: "/" }));
           }
 
-          inputElement.focus();
-          inputElement.setSelectionRange(
-            inputElement.value.length,
-            inputElement.value.length
-          );
           break;
+
+        default:
+          return;
       }
     }
   });
