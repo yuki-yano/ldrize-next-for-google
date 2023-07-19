@@ -1,37 +1,37 @@
-import { Draft } from "@reduxjs/toolkit";
-import { Candidate } from "./store/ldrize";
+import browser from 'webextension-polyfill'
+import { Draft } from '@reduxjs/toolkit'
+import { Candidate } from './store/ldrize'
+import { getDefaultStyles } from '../util'
 
-const SELECTED_BACKGROUND_COLOR = "#EFF4F8";
-const SELECTED_BORDER_COLOR = "#C4E6F8";
+let selectedItemStyle = ''
+let pinnedItemStyle = ''
+getDefaultStyles().then((style) => {
+  selectedItemStyle = style.selectedItemStyle
+  pinnedItemStyle = style.pinnedItemStyle
+})
 
 export const setSelectedStyle = (element: HTMLElement | Draft<HTMLElement>) => {
-  element.style.background = SELECTED_BACKGROUND_COLOR;
-  element.style.border = `2px solid ${SELECTED_BORDER_COLOR}`;
-};
-
-const PINNED_BORDER_COLOR = "#E4645C";
+  element.style.cssText = selectedItemStyle
+}
 
 export const setPinStyle = (element: HTMLElement | Draft<HTMLElement>) => {
-  element.style.borderLeft = `${PINNED_BORDER_COLOR} 4px solid`;
-  element.style.paddingLeft = "4px";
-};
+  element.style.cssText = pinnedItemStyle
+}
 
 export const setStyle = (candidate: Candidate | Draft<Candidate>) => {
-  const { isSelected, isPinned, element } = candidate;
+  const { isSelected, isPinned, element } = candidate
   if (isSelected) {
-    setSelectedStyle(element);
+    setSelectedStyle(element)
   }
   if (isPinned) {
-    setPinStyle(element);
+    setPinStyle(element)
   }
 
   if (!isSelected && !isPinned) {
-    element.style.border = "none";
-    element.style.background = "none";
+    element.style.cssText = ''
   }
   if (!isSelected && isPinned) {
-    element.style.borderLeft = "none";
-    element.style.paddingLeft = "0";
-    setPinStyle(element);
+    element.style.cssText = pinnedItemStyle
+    setPinStyle(element)
   }
-};
+}
