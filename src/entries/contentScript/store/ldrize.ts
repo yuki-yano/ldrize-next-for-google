@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice, current } from '@reduxjs/toolkit'
 import { castDraft } from 'immer'
 import { store } from '.'
 import { setStyle } from '../style'
@@ -38,7 +38,7 @@ export const ldrizeSlice = createSlice({
     select: (state, action: PayloadAction<{ index: number }>) => {
       const { index } = action.payload
       state.candidates[index].isSelected = true
-      setStyle(state.candidates[index])
+      setStyle(current(state.candidates[index]))
     },
     next: (state) => {
       const { cursor, candidates } = state
@@ -49,8 +49,8 @@ export const ldrizeSlice = createSlice({
       candidates[cursor].isSelected = false
       candidates[nextCursor].isSelected = true
 
-      setStyle(candidates[cursor])
-      setStyle(candidates[nextCursor])
+      setStyle(current(candidates[cursor]))
+      setStyle(current(candidates[nextCursor]))
       state.cursor = nextCursor
 
       adjustScrollToElement(candidates[nextCursor].element)
@@ -64,8 +64,8 @@ export const ldrizeSlice = createSlice({
       candidates[cursor].isSelected = false
       candidates[prevCursor].isSelected = true
 
-      setStyle(candidates[cursor])
-      setStyle(candidates[prevCursor])
+      setStyle(current(candidates[cursor]))
+      setStyle(current(candidates[prevCursor]))
       state.cursor = prevCursor
 
       adjustScrollToElement(candidates[prevCursor].element)
@@ -82,7 +82,7 @@ export const ldrizeSlice = createSlice({
         for (const candidate of candidates) {
           window.open(candidate.link, '_blank')
           candidate.isPinned = false
-          setStyle(candidate)
+          setStyle(current(candidate))
         }
       }
     },
@@ -101,8 +101,8 @@ export const ldrizeSlice = createSlice({
       candidates[cursor].isSelected = false
       candidates[nextCursor].isSelected = true
 
-      setStyle(candidates[cursor])
-      setStyle(candidates[nextCursor])
+      setStyle(current(candidates[cursor]))
+      setStyle(current(candidates[nextCursor]))
       state.cursor = nextCursor
 
       adjustScrollToElement(candidates[nextCursor].element)

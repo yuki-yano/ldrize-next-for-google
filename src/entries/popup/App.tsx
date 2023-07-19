@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, TextField, Button } from '@mui/material'
 import browser from 'webextension-polyfill'
-import { getDefaultStyles } from '../util'
+import { DEFAULT_PINNED_ITEM_STYLE, DEFAULT_SELECTED_ITEM_STYLE } from '../const'
 
 interface CssTextFieldProps {
   id: string
@@ -9,13 +9,6 @@ interface CssTextFieldProps {
   value: string
   onValueChange: (newValue: string) => void
 }
-
-let selectedItemStyle = ''
-let pinnedItemStyle = ''
-getDefaultStyles().then((styles) => {
-  selectedItemStyle = styles.selectedItemStyle
-  pinnedItemStyle = styles.pinnedItemStyle
-})
 
 const CssTextField: React.FC<CssTextFieldProps> = ({ id, label, value, onValueChange }) => (
   <TextField
@@ -32,13 +25,25 @@ const CssTextField: React.FC<CssTextFieldProps> = ({ id, label, value, onValueCh
 )
 
 const App: React.FC = () => {
-  const [selectedItem, setSelectedItem] = useState(selectedItemStyle)
-  const [pinnedItem, setPinnedItem] = useState(pinnedItemStyle)
+  const [selectedItemStyle, setSelectedItemStyle] = useState('')
+  const [pinnedItemStyle, setPinnedItemStyle] = useState('')
+
+  useEffect(() => {
+    async function f() {
+      const { selectedItemStyle, pinnedItemStyle } = await browser.storage.sync.get([
+        'selectedItemStyle',
+        'pinnedItemStyle',
+      ])
+      setSelectedItemStyle(selectedItemStyle || DEFAULT_SELECTED_ITEM_STYLE)
+      setPinnedItemStyle(pinnedItemStyle || DEFAULT_PINNED_ITEM_STYLE)
+    }
+    f()
+  }, [])
 
   const saveToStorage = () => {
     browser.storage.sync.set({
-      selectedItemStyle: selectedItem,
-      pinnedItemStyle: pinnedItem,
+      selectedItemStyle,
+      pinnedItemStyle,
     })
   }
 
@@ -47,10 +52,15 @@ const App: React.FC = () => {
       <CssTextField
         id="selectedItem"
         label="Selected item style"
-        value={selectedItem}
-        onValueChange={setSelectedItem}
+        value={selectedItemStyle}
+        onValueChange={setSelectedItemStyle}
       />
-      <CssTextField id="pinnedItem" label="Pinned item style" value={pinnedItem} onValueChange={setPinnedItem} />
+      <CssTextField
+        id="pinnedItem"
+        label="Pinned item style"
+        value={pinnedItemStyle}
+        onValueChange={setPinnedItemStyle}
+      />
       <Button onClick={saveToStorage} variant="contained">
         Save
       </Button>
