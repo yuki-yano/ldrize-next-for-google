@@ -1,6 +1,5 @@
-import * as KeyCode from "keycode-js";
 import { dispatch } from "./store";
-import { currentCandidateSelector, ldrizeSlice } from "./store/ldrize";
+import { ldrizeSlice } from "./store/ldrize";
 
 let isLoaded = false;
 
