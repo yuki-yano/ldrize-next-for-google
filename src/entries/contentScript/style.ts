@@ -13,7 +13,7 @@ const setPinStyle = (element: HTMLElement | Draft<HTMLElement>) => {
   element.style.cssText = pinnedItemStyle
 }
 
-export const setStyle = (candidate: Candidate) => {
+export const setStyle = (candidate: Draft<Candidate>) => {
   const { isSelected, isPinned, element } = candidate
 
   getDefaultStyles().then((style) => {
