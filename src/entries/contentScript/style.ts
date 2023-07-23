@@ -1,6 +1,6 @@
 import { Draft } from '@reduxjs/toolkit'
 import { Candidate } from './store/ldrize'
-import { getDefaultStyles } from '../util'
+import { getStyles } from '../util'
 
 let selectedItemStyle = ''
 let pinnedItemStyle = ''
@@ -16,7 +16,7 @@ const setPinStyle = (element: HTMLElement | Draft<HTMLElement>) => {
 export const setStyle = (candidate: Draft<Candidate>) => {
   const { isSelected, isPinned, element } = candidate
 
-  getDefaultStyles().then((style) => {
+  getStyles().then((style) => {
     selectedItemStyle = style.selectedItemStyle
     pinnedItemStyle = style.pinnedItemStyle
 

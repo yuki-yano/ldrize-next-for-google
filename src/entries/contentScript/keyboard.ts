@@ -1,60 +1,57 @@
+import { Keys } from '../util'
 import { dispatch } from './store'
 import { ldrizeSlice } from './store/ldrize'
 
 let isLoaded = false
 
-export const setUpLdrizeEventListener = () => {
+export const setUpLdrizeEventListener = ({ nextKey, prevKey, openKey, tabOpenKey, pinKey, formKey }: Keys) => {
   if (isLoaded) {
     return
   }
-  document.addEventListener('keydown', (e: KeyboardEvent) => {
+
+  document.addEventListener('keydown', (event: KeyboardEvent) => {
     if (
       !(document.activeElement instanceof HTMLInputElement) &&
       !(document.activeElement instanceof HTMLTextAreaElement)
     ) {
-      switch (e.key) {
-        case 'j':
-          e.preventDefault()
-          e.stopPropagation()
-
+      switch (event.key) {
+        case nextKey:
+          event.preventDefault()
+          event.stopPropagation()
           dispatch(ldrizeSlice.actions.next())
-
           break
-        case 'k':
-          e.preventDefault()
-          e.stopPropagation()
 
+        case prevKey:
+          event.preventDefault()
+          event.stopPropagation()
           dispatch(ldrizeSlice.actions.prev())
-
           break
-        case 'p':
-          e.preventDefault()
-          e.stopPropagation()
 
-          dispatch(ldrizeSlice.actions.pin())
-
-          break
-        case 'o':
-          e.preventDefault()
-          e.stopPropagation()
-
-          dispatch(ldrizeSlice.actions.tabOpen())
-
-          break
-        case 'v':
-          e.preventDefault()
-          e.stopPropagation()
-
+        case openKey:
+          event.preventDefault()
+          event.stopPropagation()
           dispatch(ldrizeSlice.actions.open())
-
           break
-        case 'i':
-          e.preventDefault()
-          e.stopPropagation()
+
+        case tabOpenKey:
+          event.preventDefault()
+          event.stopPropagation()
+          dispatch(ldrizeSlice.actions.tabOpen())
+          break
+
+        case pinKey:
+          event.preventDefault()
+          event.stopPropagation()
+          dispatch(ldrizeSlice.actions.pin())
+          break
+
+        case formKey:
+          event.preventDefault()
+          event.stopPropagation()
 
           // NOTE: for Chrome
           if (process.env.BROWSER === 'CHROME') {
-            const inputElement = document.querySelector('input[name="q"]') as HTMLInputElement | null
+            const inputElement = document.querySelector('textarea[name="q"]') as HTMLTextAreaElement | null
             if (inputElement) {
               inputElement.focus()
               inputElement.click()
@@ -64,7 +61,6 @@ export const setUpLdrizeEventListener = () => {
             // NOTE: for Firefox
             document.dispatchEvent(new KeyboardEvent('keydown', { key: '/' }))
           }
-
           break
 
         default:

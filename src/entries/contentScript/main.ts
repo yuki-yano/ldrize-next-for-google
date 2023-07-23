@@ -1,3 +1,4 @@
+import { getKeys } from '../util'
 import { setUpLdrizeEventListener } from './keyboard'
 import { dispatch } from './store'
 import { candidateSelector, ldrizeSlice } from './store/ldrize'
@@ -40,9 +41,10 @@ const observer = new MutationObserver((mutations) => {
   })
 })
 
-const initialize = () => {
+const initialize = async () => {
   dispatch(ldrizeSlice.actions.start())
-  setUpLdrizeEventListener()
+  const keys = await getKeys()
+  setUpLdrizeEventListener(keys)
 
   const items = getItems()
   if (items.length > 0) {
@@ -51,14 +53,14 @@ const initialize = () => {
   }
 }
 
-const main = () => {
+const main = async () => {
   const resElement = document.querySelector('#res')
   if (resElement === null) {
     return
   }
 
   observer.observe(resElement, { childList: true, subtree: true })
-  initialize()
+  await initialize()
 }
 
 main()
