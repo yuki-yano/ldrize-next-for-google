@@ -4,7 +4,7 @@ import { dispatch } from './store'
 import { candidateSelector, ldrizeSlice } from './store/ldrize'
 
 const getLinkFromItem = (item: Element): string | undefined => {
-  return item.querySelector<HTMLAnchorElement>('div > a')?.href
+  return item.querySelector<HTMLAnchorElement>('div a')?.href
 }
 
 const createCandidates = (items: Array<Element>) => {

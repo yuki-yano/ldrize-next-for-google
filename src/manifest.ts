@@ -10,7 +10,10 @@ const sharedManifest: Partial<chrome.runtime.ManifestV2 | chrome.runtime.Manifes
   content_scripts: [
     {
       js: ['src/entries/contentScript/main.ts'],
-      matches: ['https://www.google.com/search?*'],
+      matches: [
+        'https://www.google.com/search?*',
+        'https://www.google.co.jp/search?*'
+      ],
     },
   ],
   permissions: ['storage'],
