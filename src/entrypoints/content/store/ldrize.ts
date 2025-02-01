@@ -95,12 +95,12 @@ export const ldrizeSlice = createSlice({
       state.started = true
     },
     tabOpen: (state) => {
-      const candidates = state.candidates.filter((candidate) => candidate.isPinned)
-      if (candidates.length === 0) {
+      const targetCandidates = state.candidates.filter((candidate) => candidate.isPinned)
+      if (targetCandidates.length === 0) {
         const url = state.candidates.find((candidate) => candidate.isSelected)?.link
         window.open(url, '_blank')
       } else {
-        for (const candidate of candidates) {
+        for (const candidate of targetCandidates) {
           window.open(candidate.link, '_blank')
           candidate.isPinned = false
           setStyle(candidate)

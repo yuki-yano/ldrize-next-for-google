@@ -71,7 +71,6 @@ const initialize = async () => {
   setUpLdrizeEventListener(keys)
 
   const items = getItems()
-  console.log(items)
   if (items.length > 0) {
     updateItems(items)
     dispatch(ldrizeSlice.actions.select({ index: 0 }))

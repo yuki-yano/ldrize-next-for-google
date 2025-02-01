@@ -9,58 +9,62 @@ export const setUpLdrizeEventListener = ({ formKey, nextKey, openKey, pinKey, pr
     return
   }
 
-  document.addEventListener('keydown', (event: KeyboardEvent) => {
-    const definedKeys = [formKey, nextKey, openKey, pinKey, prevKey, tabOpenKey]
-    
-    if (
-      !(document.activeElement instanceof HTMLInputElement) &&
-      !(document.activeElement instanceof HTMLTextAreaElement) &&
-      definedKeys.includes(event.key)
-    ) {
-      event.preventDefault()
-      event.stopPropagation()
+  document.addEventListener(
+    'keydown',
+    (event: KeyboardEvent) => {
+      const definedKeys = [formKey, nextKey, openKey, pinKey, prevKey, tabOpenKey]
 
-      switch (event.key) {
-        case formKey:
-          // NOTE: for Chrome
-          if (process.env.BROWSER === 'CHROME') {
-            const inputElement = document.querySelector('textarea[name="q"]') as HTMLTextAreaElement | null
-            if (inputElement) {
-              inputElement.focus()
-              inputElement.click()
-              inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length)
+      if (
+        !(document.activeElement instanceof HTMLInputElement) &&
+        !(document.activeElement instanceof HTMLTextAreaElement) &&
+        definedKeys.includes(event.key)
+      ) {
+        event.preventDefault()
+        event.stopPropagation()
+
+        switch (event.key) {
+          case formKey:
+            // NOTE: for Chrome
+            if (process.env.BROWSER === 'CHROME') {
+              const inputElement = document.querySelector('textarea[name="q"]') as HTMLTextAreaElement | null
+              if (inputElement) {
+                inputElement.focus()
+                inputElement.click()
+                inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length)
+              }
+            } else {
+              // NOTE: for Firefox
+              document.dispatchEvent(new KeyboardEvent('keydown', { key: '/' }))
             }
-          } else {
-            // NOTE: for Firefox
-            document.dispatchEvent(new KeyboardEvent('keydown', { key: '/' }))
-          }
-          break
+            break
 
-        case nextKey:
-          dispatch(ldrizeSlice.actions.next())
-          break
+          case nextKey:
+            dispatch(ldrizeSlice.actions.next())
+            break
 
-        case openKey:
-          dispatch(ldrizeSlice.actions.open())
-          break
+          case openKey:
+            dispatch(ldrizeSlice.actions.open())
+            break
 
-        case pinKey:
-          dispatch(ldrizeSlice.actions.pin())
-          break
+          case pinKey:
+            dispatch(ldrizeSlice.actions.pin())
+            break
 
-        case prevKey:
-          dispatch(ldrizeSlice.actions.prev())
-          break
+          case prevKey:
+            dispatch(ldrizeSlice.actions.prev())
+            break
 
-        case tabOpenKey:
-          dispatch(ldrizeSlice.actions.tabOpen())
-          break
+          case tabOpenKey:
+            dispatch(ldrizeSlice.actions.tabOpen())
+            break
 
-        default:
-          return
+          default:
+            return
+        }
       }
-    }
-  }, true)
+    },
+    true,
+  )
 
   isLoaded = true
 }

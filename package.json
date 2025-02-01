@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "wxt",
-    "build": "wxt build",
+    "build": "pnpm run build:chrome && pnpm run build:firefox",
     "build:firefox": "wxt build --browser firefox",
     "build:chrome": "wxt build --browser chrome",
     "zip:chrome": "wxt zip",
