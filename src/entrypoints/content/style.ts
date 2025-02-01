@@ -35,5 +35,8 @@ export const setStyle = ({ elementSelector, isPinned, isSelected }: Candidate) =
       element.style.cssText = pinnedItemStyle
       setPinStyle(element)
     }
+    if (isSelected && isPinned) {
+      element.style.cssText = selectedItemStyle + pinnedItemStyle
+    }
   })
 }
