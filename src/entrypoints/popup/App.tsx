@@ -1,16 +1,21 @@
-import React, { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
-import { Box, TextField, Button, SxProps, TextFieldProps } from '@mui/material'
+import type { TextFieldProps } from '@mui/material/TextField'
+import type React from 'react'
+
+import { is, maybe } from '@core/unknownutil'
+import { Box, Button, TextField } from '@mui/material'
+import { type ChangeEvent, type Dispatch, type FC, type SetStateAction, useEffect, useState } from 'react'
 import browser from 'webextension-polyfill'
+
 import {
   DEFAULT_FORM_KEY,
   DEFAULT_NEXT_KEY,
   DEFAULT_OPEN_KEY,
-  DEFAULT_PINNED_ITEM_STYLE,
   DEFAULT_PIN_KEY,
+  DEFAULT_PINNED_ITEM_STYLE,
   DEFAULT_PREV_KEY,
   DEFAULT_SELECTED_ITEM_STYLE,
   DEFAULT_TAB_OPEN_KEY,
-} from '../const'
+} from '~/const'
 
 type BaseTextFieldProps = Omit<TextFieldProps, 'onChange' | 'value'> &
   Required<Pick<TextFieldProps, 'onChange' | 'value'>>
@@ -33,9 +38,9 @@ const KeyTextField: FC<BaseTextFieldProps> = (props) => (
 const CssTextField: FC<BaseTextFieldProps> = (props) => (
   <BaseTextField
     {...props}
+    fullWidth
     multiline
     rows={4}
-    fullWidth
     sx={{
       '.MuiInputBase-input': {
         fontFamily: 'monospace',
@@ -58,7 +63,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     async function f() {
-      const { nextKey, prevKey, openKey, tabOpenKey, pinKey, formKey, selectedItemStyle, pinnedItemStyle } =
+      let { _formKey, _nextKey, _openKey, _pinKey, _pinnedItemStyle, _prevKey, _selectedItemStyle, _tabOpenKey } =
         await browser.storage.sync.get([
           'nextKey',
           'prevKey',
@@ -69,15 +74,24 @@ const App: React.FC = () => {
           'selectedItemStyle',
           'pinnedItemStyle',
         ])
-      setNextKey(nextKey || DEFAULT_NEXT_KEY)
-      setPrevKey(prevKey || DEFAULT_PREV_KEY)
-      setOpenKey(openKey || DEFAULT_OPEN_KEY)
-      setTabOpenKey(tabOpenKey || DEFAULT_TAB_OPEN_KEY)
-      setPinKey(pinKey || DEFAULT_PIN_KEY)
-      setFormKey(formKey || DEFAULT_FORM_KEY)
 
-      setSelectedItemStyle(selectedItemStyle || DEFAULT_SELECTED_ITEM_STYLE)
-      setPinnedItemStyle(pinnedItemStyle || DEFAULT_PINNED_ITEM_STYLE)
+      const __nextKey = maybe(_nextKey, is.String) ?? DEFAULT_NEXT_KEY
+      const __prevKey = maybe(_prevKey, is.String) ?? DEFAULT_PREV_KEY
+      const __openKey = maybe(_openKey, is.String) ?? DEFAULT_OPEN_KEY
+      const __tabOpenKey = maybe(_tabOpenKey, is.String) ?? DEFAULT_TAB_OPEN_KEY
+      const __pinKey = maybe(_pinKey, is.String) ?? DEFAULT_PIN_KEY
+      const __formKey = maybe(_formKey, is.String) ?? DEFAULT_FORM_KEY
+      const __selectedItemStyle = maybe(_selectedItemStyle, is.String) ?? DEFAULT_SELECTED_ITEM_STYLE
+      const __pinnedItemStyle = maybe(_pinnedItemStyle, is.String) ?? DEFAULT_PINNED_ITEM_STYLE
+
+      setNextKey(__nextKey)
+      setPrevKey(__prevKey)
+      setOpenKey(__openKey)
+      setTabOpenKey(__tabOpenKey)
+      setPinKey(__pinKey)
+      setFormKey(__formKey)
+      setSelectedItemStyle(__selectedItemStyle)
+      setPinnedItemStyle(__pinnedItemStyle)
     }
     f()
   }, [])
@@ -93,56 +107,56 @@ const App: React.FC = () => {
 
   const saveToStorage = () => {
     browser.storage.sync.set({
-      nextKey,
-      prevKey,
-      openKey,
-      tabOpenKey,
-      pinKey,
       formKey,
-      selectedItemStyle,
+      nextKey,
+      openKey,
+      pinKey,
       pinnedItemStyle,
+      prevKey,
+      selectedItemStyle,
+      tabOpenKey,
     })
   }
 
   return (
-    <Box sx={{ width: '400px', mx: 'auto', '& > :not(:last-child)': { my: 2 } }}>
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
+    <Box sx={{ '& > :not(:last-child)': { my: 2 }, mx: 'auto', width: '400px' }}>
+      <Box sx={{ display: 'grid', gap: 1, gridTemplateColumns: 'repeat(3, 1fr)' }}>
         <Box>
-          <KeyTextField id="nextKey" label="Next key" value={nextKey} onChange={handleKeyChange(setNextKey, nextKey)} />
+          <KeyTextField id="nextKey" label="Next key" onChange={handleKeyChange(setNextKey, nextKey)} value={nextKey} />
         </Box>
         <Box>
-          <KeyTextField id="prevKey" label="Prev key" value={prevKey} onChange={handleKeyChange(setPrevKey, prevKey)} />
+          <KeyTextField id="prevKey" label="Prev key" onChange={handleKeyChange(setPrevKey, prevKey)} value={prevKey} />
         </Box>
         <Box>
-          <KeyTextField id="openKey" label="Open key" value={openKey} onChange={handleKeyChange(setOpenKey, openKey)} />
+          <KeyTextField id="openKey" label="Open key" onChange={handleKeyChange(setOpenKey, openKey)} value={openKey} />
         </Box>
         <Box>
           <KeyTextField
             id="tabOpenKey"
             label="Tab open key"
-            value={tabOpenKey}
             onChange={handleKeyChange(setTabOpenKey, tabOpenKey)}
+            value={tabOpenKey}
           />
         </Box>
         <Box>
-          <KeyTextField id="pinKey" label="Pin key" value={pinKey} onChange={handleKeyChange(setPinKey, pinKey)} />
+          <KeyTextField id="pinKey" label="Pin key" onChange={handleKeyChange(setPinKey, pinKey)} value={pinKey} />
         </Box>
         <Box>
-          <KeyTextField id="formKey" label="Form key" value={formKey} onChange={handleKeyChange(setFormKey, formKey)} />
+          <KeyTextField id="formKey" label="Form key" onChange={handleKeyChange(setFormKey, formKey)} value={formKey} />
         </Box>
       </Box>
 
       <CssTextField
         id="selectedItem"
         label="Selected item style"
-        value={selectedItemStyle}
         onChange={(e) => setSelectedItemStyle(e.target.value)}
+        value={selectedItemStyle}
       />
       <CssTextField
         id="pinnedItem"
         label="Pinned item style"
-        value={pinnedItemStyle}
         onChange={(e) => setPinnedItemStyle(e.target.value)}
+        value={pinnedItemStyle}
       />
       <Button onClick={saveToStorage} variant="contained">
         Save

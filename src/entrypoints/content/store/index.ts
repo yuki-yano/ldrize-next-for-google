@@ -1,4 +1,5 @@
 import * as redux from '@reduxjs/toolkit'
+
 import { ldrizeSlice } from './ldrize'
 
 const { configureStore } = redux
