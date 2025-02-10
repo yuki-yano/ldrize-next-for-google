@@ -21,6 +21,5 @@
     "jsx": "react-jsx",
     "types": ["chrome", "node"]
   },
-  "exclude": ["enableDevHmr.ts"],
   "include": ["./src"]
 }
